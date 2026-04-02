@@ -2,6 +2,7 @@ const button = document.getElementById('actionButton');
 const heading = document.querySelector('h1');
 
 button.addEventListener('click', () => {
-    heading.textContent = 'Thanks for visiting!';
-    button.style.display = 'none';
+    document.getElementById('about').scrollIntoView({ behavior: 'smooth' });
+    heading.textContent = 'Six seven';
+    button.textContent = 'Why would you click this';
 });
