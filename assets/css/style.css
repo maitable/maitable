@@ -283,6 +283,24 @@ body {
     line-height: 1.7;
 }
 
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.tag {
+    display: inline-block;
+    padding: 6px 12px;
+    background: #e6e6e2;
+    border: 2px solid #111;
+    color: #111;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-radius: 4px;
+}
+
 .quick-links {
     margin-top: 16px;
 }
