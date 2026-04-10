@@ -16,10 +16,14 @@ navLinks.forEach(link => {
 
 let moodIndex = 0;
 const moods = [
-    'Msg1',
-    'Msg2',
-    'Msg3',
-    'Msg4',
+    'i am, for now',
+    'undefined state',
+    'in superposition',
+    'still here',
+    'i persist',
+    'this continues',
+    'no end condition',
+    'really solving nothing'
 ];
 
 moodButton.addEventListener('click', () => {
