@@ -4,8 +4,8 @@
 
 body {
     margin: 0;
-    background: #e6e6e2;
-    color: #111;
+    background: #111;
+    color: #e6e6e2;
     font-family: 'Inter', sans-serif;
     line-height: 1.5;
 }
@@ -21,8 +21,8 @@ body {
     align-items: center;
     justify-content: space-between;
     gap: 24px;
-    background: #e7e7e1;
-    border-bottom: 2px solid #111;
+    background: #222;
+    border-bottom: 2px solid #e6e6e2;
     padding: 16px 24px;
     position: sticky;
     top: 0;
@@ -36,6 +36,7 @@ body {
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.18em;
+    color: #e6e6e2;
 }
 
 .brand-icon {
@@ -43,7 +44,7 @@ body {
     height: 36px;
     display: grid;
     place-items: center;
-    border: 2px solid #111;
+    border: 2px solid #e6e6e2;
     font-weight: 900;
 }
 
@@ -54,7 +55,7 @@ body {
 }
 
 .topnav a {
-    color: #111;
+    color: #e6e6e2;
     text-decoration: none;
     border: 2px solid transparent;
     padding: 8px 12px;
@@ -63,9 +64,24 @@ body {
 }
 
 .topnav a:hover {
-    background: #111;
-    color: #f7f7f3;
-    border-color: #111;
+    background: #e6e6e2;
+    color: #111;
+    border-color: #e6e6e2;
+}
+
+.dark-mode-btn {
+    background: none;
+    border: 2px solid #e6e6e2;
+    color: #e6e6e2;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+.dark-mode-btn:hover {
+    background: #e6e6e2;
+    color: #111;
 }
 
 .hero-panel {
@@ -81,7 +97,7 @@ body {
 .window-card,
 .contact-copy,
 .link-pill {
-    background: #f5f5f1;
+    background: #222;
 }
 
 .hero-copy,
@@ -89,9 +105,9 @@ body {
 .intro-copy,
 .contact-copy,
 .window-card {
-    border: 2px solid #111;
+    border: 2px solid #e6e6e2;
     border-radius: 12px;
-    box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.08);
+    box-shadow: 8px 8px 0 rgba(230, 230, 226, 0.15);
 }
 
 .hero-copy,
@@ -101,7 +117,7 @@ body {
 
 .hero-eyebrow {
     margin: 0 0 14px;
-    color: #111;
+    color: #e6e6e2;
     font-size: 0.85rem;
     font-weight: 800;
     letter-spacing: 0.18em;
@@ -118,7 +134,7 @@ body {
 .hero-description {
     margin: 24px 0 0;
     font-size: 1rem;
-    color: #1a1a1a;
+    color: #ccc;
     max-width: 560px;
 }
 
@@ -134,27 +150,28 @@ body {
     align-items: center;
     justify-content: center;
     padding: 12px 20px;
-    border: 2px solid #111;
-    background: #f5f5f1;
-    color: #111;
+    border: 2px solid #e6e6e2;
+    background: #222;
+    color: #e6e6e2;
     text-decoration: none;
     font-weight: 700;
     transition: all 0.2s ease;
 }
 
 .hero-button:hover {
-    background: #111;
-    color: #f7f7f3;
-}
-
-.hero-button.secondary {
-    border-color: #444;
+    background: #e6e6e2;
     color: #111;
 }
 
+.hero-button.secondary {
+    border-color: #888;
+    color: #e6e6e2;
+}
+
 .hero-button.secondary:hover {
-    background: #111;
-    color: #f7f7f3;
+    background: #e6e6e2;
+    color: #111;
+    border-color: #e6e6e2;
 }
 
 .hero-simulator {
@@ -172,7 +189,7 @@ body {
     justify-content: space-between;
     gap: 16px;
     width: 100%;
-    border: 2px solid #111;
+    border: 2px solid #e6e6e2;
     border-radius: 12px;
     padding: 14px 18px;
 }
@@ -187,52 +204,57 @@ body {
     font-size: 0.72rem;
     text-transform: uppercase;
     letter-spacing: 0.18em;
-    color: #222;
+    color: #aaa;
     margin-bottom: 6px;
 }
 
 .stat-value {
     font-size: 2rem;
     font-weight: 800;
-    color: #111;
+    color: #e6e6e2;
 }
 
 .sim-text {
     min-height: 108px;
-    border: 2px solid #111;
+    border: 2px solid #e6e6e2;
     border-radius: 12px;
     padding: 18px;
     font-family: 'Inter', monospace;
     font-size: 0.95rem;
     line-height: 1.75;
-    color: #111;
+    color: #e6e6e2;
 }
 
 .sim-text span.correct {
-    background: rgba(46, 125, 50, 0.12);
-    color: #0f380f;
+    background: rgba(74, 222, 128, 0.15);
+    color: #4ade80;
 }
 
 .sim-text span.incorrect {
-    background: rgba(211, 47, 47, 0.15);
-    color: #6f1212;
+    background: rgba(248, 113, 113, 0.15);
+    color: #f87171;
 }
 
 .typing-input {
     width: 100%;
     min-height: 108px;
     padding: 16px;
-    border: 2px solid #111;
+    border: 2px solid #e6e6e2;
     border-radius: 12px;
-    background: #f7f7f4;
+    background: #1a1a1a;
+    color: #e6e6e2;
     font-family: 'Inter', monospace;
     font-size: 0.98rem;
     line-height: 1.6;
     outline: none;
 }
 
+.typing-input::placeholder {
+    color: #888;
+}
+
 .typing-input:focus {
-    box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 0 0 4px rgba(230, 230, 226, 0.15);
 }
 
 .sim-controls {
@@ -242,17 +264,18 @@ body {
 
 .restart-btn {
     padding: 12px 18px;
-    border: 2px solid #111;
-    background: #f5f5f1;
-    color: #111;
+    border: 2px solid #e6e6e2;
+    background: #222;
+    color: #e6e6e2;
     font-weight: 700;
     border-radius: 10px;
     cursor: pointer;
+    transition: all 0.2s ease;
 }
 
 .restart-btn:hover {
-    background: #111;
-    color: #f7f7f3;
+    background: #e6e6e2;
+    color: #111;
 }
 
 .intro-panel,
@@ -279,7 +302,7 @@ body {
 .intro-copy p,
 .contact-copy p {
     margin: 14px 0 0;
-    color: #111;
+    color: #e6e6e2;
     line-height: 1.7;
 }
 
@@ -293,9 +316,9 @@ body {
 .tag {
     display: inline-block;
     padding: 6px 12px;
-    background: #e6e6e2;
-    border: 2px solid #111;
-    color: #111;
+    background: #111;
+    border: 2px solid #e6e6e2;
+    color: #e6e6e2;
     font-size: 0.9rem;
     font-weight: 500;
     border-radius: 4px;
@@ -319,18 +342,19 @@ body {
 .link-pill {
     display: block;
     padding: 18px 14px;
-    border: 2px solid #111;
+    border: 2px solid #e6e6e2;
     border-radius: 10px;
     text-align: center;
     font-weight: 700;
-    color: #111;
+    color: #e6e6e2;
     text-decoration: none;
-    background: #ecebe6;
+    background: #222;
+    transition: all 0.2s ease;
 }
 
 .link-pill:hover {
-    background: #111;
-    color: #f7f7f3;
+    background: #e6e6e2;
+    color: #111;
 }
 
 .window-section {
@@ -352,14 +376,15 @@ body {
 }
 
 .text-link {
-    color: #111;
+    color: #e6e6e2;
     text-decoration: none;
     font-weight: 700;
     border-bottom: 2px solid transparent;
+    transition: border-color 0.2s ease;
 }
 
 .text-link:hover {
-    border-color: #111;
+    border-color: #e6e6e2;
 }
 
 .windows-grid {
@@ -374,9 +399,9 @@ body {
 }
 
 .window-bar {
-    background: #dad8d1;
+    background: #333;
     padding: 12px 16px;
-    border-bottom: 2px solid #111;
+    border-bottom: 2px solid #e6e6e2;
     font-size: 0.9rem;
     letter-spacing: 0.08em;
 }
@@ -392,7 +417,7 @@ body {
 
 .window-body p {
     margin: 0 0 18px;
-    color: #111;
+    color: #ccc;
     line-height: 1.7;
 }
 
@@ -401,21 +426,22 @@ body {
     align-items: center;
     justify-content: center;
     padding: 10px 16px;
-    border: 2px solid #111;
+    border: 2px solid #e6e6e2;
     border-radius: 10px;
-    background: #f5f5f1;
-    color: #111;
+    background: #222;
+    color: #e6e6e2;
     text-decoration: none;
     font-weight: 700;
+    transition: all 0.2s ease;
 }
 
 .small-button:hover {
-    background: #111;
-    color: #f7f7f3;
+    background: #e6e6e2;
+    color: #111;
 }
 
 .contact-copy a {
-    color: #111;
+    color: #e6e6e2;
     text-decoration: underline;
 }
 
@@ -424,12 +450,12 @@ body {
     left: 50%;
     bottom: 32px;
     transform: translateX(-50%) translateY(18px);
-    background: #fff;
-    color: #111;
-    border: 2px solid #111;
+    background: #222;
+    color: #e6e6e2;
+    border: 2px solid #e6e6e2;
     border-radius: 10px;
     padding: 12px 18px;
-    box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.08);
+    box-shadow: 8px 8px 0 rgba(230, 230, 226, 0.15);
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.24s ease, transform 0.24s ease;
@@ -483,4 +509,3 @@ body {
         align-items: center;
     }
 }
-
