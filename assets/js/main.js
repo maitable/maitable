@@ -46,7 +46,6 @@ moodButton.addEventListener('click', () => {
 
 const darkModeToggle = document.getElementById('darkModeToggle');
 if (darkModeToggle) {
-    // Check for saved preference
     const savedMode = localStorage.getItem('darkMode');
     if (savedMode === 'true') {
         document.body.classList.add('dark-mode');
