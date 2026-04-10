@@ -61,17 +61,36 @@ if (darkModeToggle) {
 }
 
 const promptText = [
-    "def multiply(x, y): return x * y",
-    "result = sum(numbers) / len(numbers)",
-    "for item in items: print(item)",
-    "if user.is_active(): login(user)",
-    "data = {'a': 1, 'b': 2, 'c': 3}",
-    "values = [x**2 for x in range(5)]",
-    "message = f'Count: {count}'",
-    "url = 'https://example.com'",
-    "def get_even(nums): return [n for n in nums if n % 2 == 0]",
-    "cache[key] = compute_value(item)"
+    "import torch",
+    "import numpy as np",
+    "import pandas as pd",
+    "from sklearn.model_selection import train_test_split",
+    "X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)",
+    "model = torch.nn.Linear(in_features=10, out_features=1)",
+    "optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)",
+    "loss_fn = torch.nn.MSELoss()",
+    "for epoch in range(10):",
+    "    optimizer.zero_grad()",
+    "    output = model(X_train)",
+    "    loss = loss_fn(output, y_train)",
+    "    loss.backward()",
+    "    optimizer.step()",
+    "df = pd.read_csv('data.csv')",
+    "df = df.dropna()",
+    "df['normalized'] = (df['value'] - df['value'].mean()) / df['value'].std()",
+    "preds = model(torch.tensor(X_test, dtype=torch.float32))",
+    "accuracy = (preds.argmax(dim=1) == y_test).float().mean()",
+    "from sklearn.ensemble import RandomForestClassifier",
+    "clf = RandomForestClassifier(n_estimators=100)",
+    "clf.fit(X_train, y_train)",
+    "y_pred = clf.predict(X_test)",
+    "import matplotlib.pyplot as plt",
+    "plt.plot(losses)",
+    "plt.xlabel('epoch')",
+    "plt.ylabel('loss')",
+    "plt.show()",
 ];
+
 const targetText = document.getElementById('targetText');
 const typingInput = document.getElementById('typingInput');
 const wpmDisplay = document.getElementById('wpm');
@@ -87,51 +106,13 @@ let timer = null;
 let timeLeft = 15;
 
 function choosePrompt() {
-    currentPrompt = promptText[Math.floor(Math.random() * promptText.length)];
+    currentPrompt = promptText[Math.floor(Math.random() * promptText.length)].trim();
     renderPrompt();
     timeLeft = getPromptTime();
 }
 
 function getPromptTime() {
     return Math.max(15, Math.ceil(currentPrompt.length / 2));
-}
-
-function normalizeCode(code) {
-    return code
-        .replace(/\s*([+\-*/%=&|<>!^:,])\s*/g, '$1')
-        .replace(/\s*([{}])\s*/g, '$1')
-        .replace(/\s+/g, ' ')
-        .trim();
-}
-
-const operatorChars = /[+\-*/%=&|<>!^:,{}]/;
-function getNormalizedMapping(code) {
-    const rawToNorm = Array(code.length).fill(null);
-    const normToRaw = [];
-    const normalizedChars = [];
-    let normIndex = 0;
-
-    for (let i = 0; i < code.length; i += 1) {
-        const char = code[i];
-        if (char === ' ') {
-            const prev = code[i - 1];
-            const next = code[i + 1];
-            if ((prev && operatorChars.test(prev)) || (next && operatorChars.test(next))) {
-                continue;
-            }
-        }
-
-        rawToNorm[i] = normIndex;
-        normToRaw[normIndex] = i;
-        normalizedChars.push(char);
-        normIndex += 1;
-    }
-
-    return {
-        normalized: normalizedChars.join(''),
-        rawToNorm,
-        normToRaw,
-    };
 }
 
 function renderPrompt() {
@@ -142,19 +123,95 @@ function renderPrompt() {
 }
 
 function updateStats() {
-    if (!typingInput || !wpmDisplay || !accuracyDisplay || !timeDisplay) return;
+    if (!typingInput || !wpmDisplay || !accuracyDisplay || !timeDisplay || !targetText) return;
 
     const typed = typingInput.value;
-    const normalizedPrompt = normalizeCode(currentPrompt);
-    const normalizedTyped = normalizeCode(typed);
-    const promptChars = normalizedPrompt.split('');
+    const cursor = typingInput.selectionStart;
+    
+    let p = 0;
+    let t = 0;
     let correct = 0;
+    let errorCount = 0;
+    const charStates = new Array(currentPrompt.length).fill(null);
 
-    for (let i = 0; i < normalizedTyped.length; i += 1) {
-        if (normalizedTyped[i] === promptChars[i]) correct += 1;
+    const operators = /[+\-*/%=&|<>!^:,{}()[\]]/;
+
+    function isSpaceOptionalInPrompt(prompt, index) {
+        if (prompt[index] !== ' ') return false;
+        let prev = index - 1;
+        while (prev >= 0 && prompt[prev] === ' ') prev--;
+        if (prev >= 0 && operators.test(prompt[prev])) return true;
+        
+        let next = index + 1;
+        while (next < prompt.length && prompt[next] === ' ') next++;
+        if (next < prompt.length && operators.test(prompt[next])) return true;
+        
+        return false;
     }
 
-    const accuracy = normalizedTyped.length === 0 ? 100 : Math.max(0, Math.round((correct / normalizedTyped.length) * 100));
+    function isExtraSpaceAllowed(prompt, index) {
+        if (index < prompt.length && operators.test(prompt[index])) return true;
+        let prev = index - 1;
+        while (prev >= 0 && prompt[prev] === ' ') prev--;
+        if (prev >= 0 && operators.test(prompt[prev])) return true;
+        return false;
+    }
+
+    while (p < currentPrompt.length && t < typed.length) {
+        const pChar = currentPrompt[p];
+        const tChar = typed[t];
+
+        if (pChar === tChar) {
+            charStates[p] = 'correct';
+            correct++;
+            p++;
+            t++;
+        } else if (pChar === ' ' && isSpaceOptionalInPrompt(currentPrompt, p)) {
+            charStates[p] = 'correct'; 
+            correct++; 
+            p++; 
+        } else if (tChar === ' ' && isExtraSpaceAllowed(currentPrompt, p)) {
+            t++; 
+        } else {
+
+            if (t >= cursor && /^[)\]}"'`]+$/.test(typed.slice(t))) {
+                break; 
+            }
+            
+            // Hard error
+            charStates[p] = 'incorrect';
+            errorCount++;
+            p++;
+            t++;
+        }
+    }
+
+    while (p < currentPrompt.length && currentPrompt[p] === ' ' && isSpaceOptionalInPrompt(currentPrompt, p)) {
+        charStates[p] = 'correct';
+        correct++;
+        p++;
+    }
+    
+    while (t < typed.length && typed[t] === ' ' && isExtraSpaceAllowed(currentPrompt, p)) {
+        t++;
+    }
+
+    let isComplete = false;
+    if (p === currentPrompt.length && errorCount === 0) {
+        let remainingValid = true;
+        for (let i = t; i < typed.length; i++) {
+            if (typed[i] !== ' ' || !isExtraSpaceAllowed(currentPrompt, p)) {
+                remainingValid = false;
+                break;
+            }
+        }
+        if (remainingValid) {
+            isComplete = true;
+        }
+    }
+
+    const totalEvaluated = correct + errorCount;
+    const accuracy = totalEvaluated === 0 ? 100 : Math.max(0, Math.round((correct / totalEvaluated) * 100));
     const elapsedSeconds = startTime ? Math.max(1, Math.round((Date.now() - startTime) / 1000)) : 1;
     const wpm = Math.round((correct / 5) / (elapsedSeconds / 60));
 
@@ -162,34 +219,22 @@ function updateStats() {
     wpmDisplay.textContent = wpm;
     timeDisplay.textContent = timeLeft;
 
-    highlightPrompt(typed);
-
-    if (normalizeCode(typed) === normalizeCode(currentPrompt)) {
-        clearInterval(timer);
-        active = false;
-    }
-}
-
-function highlightPrompt(typed) {
-    if (!targetText) return;
-    const { normalized: promptNorm, rawToNorm } = getNormalizedMapping(currentPrompt);
-    const { normalized: typedNorm } = getNormalizedMapping(typed);
-    const chars = targetText.querySelectorAll('span');
-
-    chars.forEach((span, rawIndex) => {
+    // Apply highlighting
+    const spans = targetText.querySelectorAll('span');
+    spans.forEach((span, i) => {
         span.classList.remove('correct', 'incorrect');
-        const normIndex = rawToNorm[rawIndex];
-        if (normIndex === null) return;
-
-        const typedChar = typedNorm[normIndex];
-        if (typedChar == null) return;
-
-        if (typedChar === promptNorm[normIndex]) {
+        if (charStates[i] === 'correct') {
             span.classList.add('correct');
-        } else {
+        } else if (charStates[i] === 'incorrect') {
             span.classList.add('incorrect');
         }
     });
+
+    // Win Condition
+    if (isComplete) {
+        clearInterval(timer);
+        active = false;
+    }
 }
 
 function startTimer() {
@@ -230,11 +275,14 @@ const autoPairs = {
     "'": "'",
     '`': '`'
 };
+const closingChars = [')', ']', '}', '"', "'", '`'];
 
 if (typingInput) {
-    typingInput.addEventListener('input', () => {
-        if (!gameStarted && !active) startTimer();
-        if (active) updateStats();
+    ['input', 'keyup', 'click'].forEach(evt => {
+        typingInput.addEventListener(evt, () => {
+            if (evt === 'input' && !gameStarted && !active) startTimer();
+            if (active) updateStats();
+        });
     });
 
     typingInput.addEventListener('keydown', event => {
@@ -249,30 +297,24 @@ if (typingInput) {
             return;
         }
 
-        const pair = autoPairs[event.key];
-        if (!pair || event.ctrlKey || event.metaKey || event.altKey) return;
-
         const { selectionStart, selectionEnd, value } = typingInput;
         if (selectionStart === null || selectionEnd === null) return;
 
-        const nextChar = value[selectionStart];
-        if (selectionStart === selectionEnd && nextChar === pair) {
+        if (selectionStart === selectionEnd && closingChars.includes(event.key) && value[selectionStart] === event.key) {
             event.preventDefault();
             typingInput.setSelectionRange(selectionStart + 1, selectionStart + 1);
+            updateStats();
             return;
         }
 
-        const previousChar = value[selectionStart - 1];
-        if (selectionStart === selectionEnd && event.key === '(' && nextChar === ')' && previousChar === '(') {
-            event.preventDefault();
-            typingInput.setSelectionRange(selectionStart + 1, selectionStart + 1);
-            return;
-        }
+        const pair = autoPairs[event.key];
+        if (!pair || event.ctrlKey || event.metaKey || event.altKey) return;
 
         event.preventDefault();
         const before = value.slice(0, selectionStart);
         const after = value.slice(selectionEnd);
         typingInput.value = before + event.key + pair + after;
+        
         typingInput.setSelectionRange(selectionStart + 1, selectionStart + 1);
         updateStats();
     });
