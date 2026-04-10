@@ -1,34 +1,31 @@
-const button = document.getElementById('actionButton');
-const heading = document.querySelector('h1');
-const navLinks = document.querySelectorAll('nav a');
-const projectItems = document.querySelectorAll('#projects li');
+const moodButton = document.getElementById('moodButton');
+const navLinks = document.querySelectorAll('a[href^="#"]');
 
 navLinks.forEach(link => {
     link.addEventListener('click', event => {
+        const href = link.getAttribute('href');
+        if (!href || href === '#') return;
         event.preventDefault();
-        const targetId = link.getAttribute('href').slice(1);
+        const targetId = href.slice(1);
         const target = document.getElementById(targetId);
-        //if (target) {
-        //    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        //}
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
     });
 });
 
-let buttonState = 0;
-const secrets = [
-    'Here is a secret: You are already building something great!',
-    'Neat fact: This site uses JavaScript for interactive behavior.',
-    'Keep going: polish is in the details, and you are in control.'
+let moodIndex = 0;
+const moods = [
+    'Msg1',
+    'Msg2',
+    'Msg3',
+    'Msg4',
 ];
 
-button.addEventListener('click', () => {
-    heading.textContent = 'Thanks for checking this out!';
-    button.textContent = 'Show another secret';
-    //document.getElementById('about').scrollIntoView({ behavior: 'smooth' });
-
+moodButton.addEventListener('click', () => {
     const toast = document.createElement('div');
-    toast.className = 'secret-toast';
-    toast.textContent = secrets[buttonState % secrets.length];
+    toast.className = 'toast';
+    toast.textContent = moods[moodIndex % moods.length];
     document.body.appendChild(toast);
 
     setTimeout(() => {
@@ -38,30 +35,232 @@ button.addEventListener('click', () => {
     setTimeout(() => {
         toast.classList.remove('visible');
         setTimeout(() => toast.remove(), 400);
-    }, 2600);
+    }, 3000);
 
-    buttonState += 1;
+    moodIndex += 1;
 });
 
-projectItems.forEach(item => {
-    const detail = document.createElement('small');
-    detail.textContent = ' Click to toggle more details.';
-    detail.className = 'project-tip';
-    item.appendChild(detail);
+const promptText = [
+    "def multiply(x, y): return x * y",
+    "result = sum(numbers) / len(numbers)",
+    "for item in items: print(item)",
+    "if user.is_active(): login(user)",
+    "data = {'a': 1, 'b': 2, 'c': 3}",
+    "values = [x**2 for x in range(5)]",
+    "message = f'Count: {count}'",
+    "url = 'https://example.com'",
+    "def get_even(nums): return [n for n in nums if n % 2 == 0]",
+    "cache[key] = compute_value(item)"
+];
+const targetText = document.getElementById('targetText');
+const typingInput = document.getElementById('typingInput');
+const wpmDisplay = document.getElementById('wpm');
+const accuracyDisplay = document.getElementById('accuracy');
+const timeDisplay = document.getElementById('time');
+const restartTyping = document.getElementById('restartTyping');
 
-    item.addEventListener('click', () => {
-        item.classList.toggle('expanded');
-        if (item.classList.contains('expanded')) {
-            item.dataset.original = item.textContent;
-            item.textContent = item.textContent.replace(' Click to toggle more details.', '');
-            const extra = document.createElement('p');
-            extra.className = 'project-details';
-            extra.textContent = 'More interaction has been added: this project description expands in place to show more information. Add your real project story here.';
-            item.appendChild(extra);
+let currentPrompt = '';
+let active = false;
+let gameStarted = false;
+let startTime = null;
+let timer = null;
+let timeLeft = 15;
+
+function choosePrompt() {
+    currentPrompt = promptText[Math.floor(Math.random() * promptText.length)];
+    renderPrompt();
+    timeLeft = getPromptTime();
+}
+
+function getPromptTime() {
+    return Math.max(15, Math.ceil(currentPrompt.length / 2));
+}
+
+function normalizeCode(code) {
+    return code
+        .replace(/\s*([+\-*/%=&|<>!^:,])\s*/g, '$1')
+        .replace(/\s*([{}])\s*/g, '$1')
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+const operatorChars = /[+\-*/%=&|<>!^:,{}]/;
+function getNormalizedMapping(code) {
+    const rawToNorm = Array(code.length).fill(null);
+    const normToRaw = [];
+    const normalizedChars = [];
+    let normIndex = 0;
+
+    for (let i = 0; i < code.length; i += 1) {
+        const char = code[i];
+        if (char === ' ') {
+            const prev = code[i - 1];
+            const next = code[i + 1];
+            if ((prev && operatorChars.test(prev)) || (next && operatorChars.test(next))) {
+                continue;
+            }
+        }
+
+        rawToNorm[i] = normIndex;
+        normToRaw[normIndex] = i;
+        normalizedChars.push(char);
+        normIndex += 1;
+    }
+
+    return {
+        normalized: normalizedChars.join(''),
+        rawToNorm,
+        normToRaw,
+    };
+}
+
+function renderPrompt() {
+    if (!targetText) return;
+    targetText.innerHTML = currentPrompt.split('').map((char, index) => {
+        return `<span data-index="${index}">${char}</span>`;
+    }).join('');
+}
+
+function updateStats() {
+    if (!typingInput || !wpmDisplay || !accuracyDisplay || !timeDisplay) return;
+
+    const typed = typingInput.value;
+    const normalizedPrompt = normalizeCode(currentPrompt);
+    const normalizedTyped = normalizeCode(typed);
+    const promptChars = normalizedPrompt.split('');
+    let correct = 0;
+
+    for (let i = 0; i < normalizedTyped.length; i += 1) {
+        if (normalizedTyped[i] === promptChars[i]) correct += 1;
+    }
+
+    const accuracy = normalizedTyped.length === 0 ? 100 : Math.max(0, Math.round((correct / normalizedTyped.length) * 100));
+    const elapsedSeconds = startTime ? Math.max(1, Math.round((Date.now() - startTime) / 1000)) : 1;
+    const wpm = Math.round((correct / 5) / (elapsedSeconds / 60));
+
+    accuracyDisplay.textContent = accuracy;
+    wpmDisplay.textContent = wpm;
+    timeDisplay.textContent = timeLeft;
+
+    highlightPrompt(typed);
+
+    if (normalizeCode(typed) === normalizeCode(currentPrompt)) {
+        clearInterval(timer);
+        active = false;
+    }
+}
+
+function highlightPrompt(typed) {
+    if (!targetText) return;
+    const { normalized: promptNorm, rawToNorm } = getNormalizedMapping(currentPrompt);
+    const { normalized: typedNorm } = getNormalizedMapping(typed);
+    const chars = targetText.querySelectorAll('span');
+
+    chars.forEach((span, rawIndex) => {
+        span.classList.remove('correct', 'incorrect');
+        const normIndex = rawToNorm[rawIndex];
+        if (normIndex === null) return;
+
+        const typedChar = typedNorm[normIndex];
+        if (typedChar == null) return;
+
+        if (typedChar === promptNorm[normIndex]) {
+            span.classList.add('correct');
         } else {
-            const extra = item.querySelector('.project-details');
-            if (extra) extra.remove();
-            item.appendChild(detail);
+            span.classList.add('incorrect');
         }
     });
-});
+}
+
+function startTimer() {
+    if (active || !typingInput) return;
+    active = true;
+    gameStarted = true;
+    startTime = Date.now();
+    timeLeft = getPromptTime();
+    updateStats();
+    timer = setInterval(() => {
+        timeLeft -= 1;
+        updateStats();
+        if (timeLeft <= 0) {
+            clearInterval(timer);
+            active = false;
+        }
+    }, 1000);
+}
+
+function resetTyping() {
+    if (!typingInput) return;
+    typingInput.value = '';
+    active = false;
+    gameStarted = false;
+    startTime = null;
+    clearInterval(timer);
+    choosePrompt();
+    timeLeft = getPromptTime();
+    updateStats();
+    typingInput.focus();
+}
+
+const autoPairs = {
+    '(': ')',
+    '[': ']',
+    '{': '}',
+    '"': '"',
+    "'": "'",
+    '`': '`'
+};
+
+if (typingInput) {
+    typingInput.addEventListener('input', () => {
+        if (!gameStarted && !active) startTimer();
+        if (active) updateStats();
+    });
+
+    typingInput.addEventListener('keydown', event => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            resetTyping();
+            return;
+        }
+
+        if (!active && gameStarted) {
+            event.preventDefault();
+            return;
+        }
+
+        const pair = autoPairs[event.key];
+        if (!pair || event.ctrlKey || event.metaKey || event.altKey) return;
+
+        const { selectionStart, selectionEnd, value } = typingInput;
+        if (selectionStart === null || selectionEnd === null) return;
+
+        const nextChar = value[selectionStart];
+        if (selectionStart === selectionEnd && nextChar === pair) {
+            event.preventDefault();
+            typingInput.setSelectionRange(selectionStart + 1, selectionStart + 1);
+            return;
+        }
+
+        const previousChar = value[selectionStart - 1];
+        if (selectionStart === selectionEnd && event.key === '(' && nextChar === ')' && previousChar === '(') {
+            event.preventDefault();
+            typingInput.setSelectionRange(selectionStart + 1, selectionStart + 1);
+            return;
+        }
+
+        event.preventDefault();
+        const before = value.slice(0, selectionStart);
+        const after = value.slice(selectionEnd);
+        typingInput.value = before + event.key + pair + after;
+        typingInput.setSelectionRange(selectionStart + 1, selectionStart + 1);
+        updateStats();
+    });
+}
+
+if (restartTyping) {
+    restartTyping.addEventListener('click', resetTyping);
+}
+
+choosePrompt();
+updateStats();

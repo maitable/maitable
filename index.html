@@ -3,52 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Portfolio</title>
+    <title>Maita</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-    <header>
-        <h1>Hello, I am Maita!</h1>
-    </header>
-    <nav>
-        <a href="#about">About</a> 
-        <a href="#projects">Projects</a> 
-        <a href="#skills">Skills</a> 
-        <a href="#contact">Contact</a>
-    </nav>
-    <main>
-        <section id="about">
-            <h2>About Me</h2>
-            <p>I am the one who is, and the one who is not. <br>
-                For I long for the day when I will have something to put here, but until then, <br>
-                I am the one who is, and the one who is not. <br>
-                Are you the one who is, or the one who is not? <br>
-                Are you confused? Because I am. <br>
-            </p>
+    <div class="page-frame">
+        <header class="topbar">
+            <div class="brand">
+                <div class="brand-icon">M</div>
+                <span class="brand-label">Maita</span>
+            </div>
+            <nav class="topnav">
+                <a href="https://github.com/27maita" target="_blank" rel="noopener noreferrer">Clone me</a>
+                <a href="https://linkedin.com/in/will_fill" target="_blank" rel="noopener noreferrer">Find me</a>
+            </nav>
+        </header>
+
+        <main class="hero-panel">
+            <section class="hero-copy">
+                <p class="hero-eyebrow">Text</p>
+                <h1>Bigger Text</h1>
+                <p class="hero-description">Smaller text.......</p>
+                <div class="hero-actions">
+                    <a href="#projects" class="hero-button">Link to projects</a>
+                    <button id="moodButton" class="hero-button secondary">Check up on me</button>
+                </div>
+            </section>
+
+            <section class="hero-copy hero-simulator">
+                <p class="hero-eyebrow">Text</p>
+                <div class="typing-stats">
+                    <div class="stats-container">
+                        <div class="stat">
+                            <div class="stat-label">WPM</div>
+                            <div class="stat-value" id="wpm">0</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">Accuracy</div>
+                            <div class="stat-value" id="accuracy">100</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-label">Time</div>
+                            <div class="stat-value" id="time">15</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="sim-text" id="targetText"></div>
+                <textarea class="typing-input" id="typingInput" placeholder="Start typing here..." spellcheck="false"></textarea>
+                <div class="sim-controls">
+                    <button id="restartTyping" class="restart-btn">Restart</button>
+                </div>
+            </section>
+        </main>
+
+        <section class="intro-panel" id="about">
+            <div class="intro-copy">
+                <h2>Relatively big text</h2>
+                <p>Relatively smaller text</p>
+            </div>
         </section>
 
-        <section id="projects">
-            <h2>My Projects</h2>
-            <ul>
-                <li><strong>Will actually have a project here</strong> - Will actually have a project description.</li>
-                <li><strong>Will actually have another project here</strong> - Will actually have a project description.</li>
-                <li><strong>Will actually have another project here</strong> - Will actually have a project description.</li>
-            </ul>
+        <section class="window-section" id="projects">
+            <div class="section-header">
+                <h2>Projects</h2>
+            </div>
+            <div class="windows-grid">
+                <article class="window-card">
+                    <div class="window-bar"><span>some/url/or/name/idk/yet</span></div>
+                    <div class="window-body">
+                        <h3>Project name</h3>
+                        <p>Project description</p>
+                        <a href="#" class="small-button">View project</a>
+                    </div>
+                </article>
+                <article class="window-card">
+                    <div class="window-bar"><span>some/url/or/name/idk/yet</span></div>
+                    <div class="window-body">
+                        <h3>Project name</h3>
+                        <p>CProject description</p>
+                        <a href="#" class="small-button">View project</a>
+                    </div>
+                </article>
+            </div>
         </section>
 
-        <section id="skills">
-            <h2>Skills</h2>
-            <p>None so far</p>
-        </section>
+    </div>
 
-        <section id="contact">
-            <h2>Contact</h2>
-            <p>Email: will figure</p>
-            <p>I hate linkedin so much: <a href="#">linkedin.com/in/will_fill</a></p>
-        </section>
-
-        <button id="actionButton">Tell me something secret</button>
-    </main>
     <script src="assets/js/main.js"></script>
 </body>
 </html>
