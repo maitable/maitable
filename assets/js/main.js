@@ -13,7 +13,7 @@ async function loadAchievements() {
     const items = Array.isArray(data) ? data : Object.values(data);
 
     if (items.length === 0) {
-      grid.innerHTML = `<p style="opacity:0.6">This is all i got</p>`;
+      grid.innerHTML = `<p style="opacity:0.6">:(</p>`;
       return;
     }
 
@@ -23,7 +23,7 @@ async function loadAchievements() {
         <article class="window-card">
           <div class="window-bar"><span>${escapeHtml(item.path || '')}</span></div>
           <div class="window-body">
-            <h3>${escapeHtml(item.name || 'Untitled')}</h3>
+            <h3>${escapeHtml(item.name || 'some no namer')}</h3>
             <p>${escapeHtml(item.description || '')}</p>
             ${hasLink ? `<a href="${encodeURI(item.link)}" class="small-button" target="_blank" rel="noopener noreferrer">???</a>` : ''}
           </div>
