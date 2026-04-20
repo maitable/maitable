@@ -8,18 +8,28 @@ async function loadAchievements() {
   try {
     const res = await fetch('assets/json/achiev.json');
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const items = await res.json();
+    const data = await res.json();
 
-    grid.innerHTML = items.map(item => `
-      <article class="window-card">
-        <div class="window-bar"><span>${escapeHtml(item.path)}</span></div>
-        <div class="window-body">
-          <h3>${escapeHtml(item.title)}</h3>
-          <p>${escapeHtml(item.description)}</p>
-          ${item.link ? `<a href="${encodeURI(item.link)}" class="small-button" target="_blank" rel="noopener noreferrer">${escapeHtml(item.linkLabel || 'View details')}</a>` : ''}
-        </div>
-      </article>
-    `).join('');
+    const items = Array.isArray(data) ? data : Object.values(data);
+
+    if (items.length === 0) {
+      grid.innerHTML = `<p style="opacity:0.6">This is all i got</p>`;
+      return;
+    }
+
+    grid.innerHTML = items.map(item => {
+      const hasLink = item.link && item.link.trim() !== '';
+      return `
+        <article class="window-card">
+          <div class="window-bar"><span>${escapeHtml(item.path || '')}</span></div>
+          <div class="window-body">
+            <h3>${escapeHtml(item.name || 'Untitled')}</h3>
+            <p>${escapeHtml(item.description || '')}</p>
+            ${hasLink ? `<a href="${encodeURI(item.link)}" class="small-button" target="_blank" rel="noopener noreferrer">???</a>` : ''}
+          </div>
+        </article>
+      `;
+    }).join('');
   } catch (err) {
     console.error('They dont want to load', err);
     grid.innerHTML = `<p style="opacity:0.6">bro pleasework</p>`;
@@ -88,7 +98,7 @@ if (darkModeToggle) {
     darkModeToggle.addEventListener('click', () => {
         document.body.classList.toggle('dark-mode');
         const isDark = document.body.classList.contains('dark-mode');
-        darkModeToggle.textContent = isDark ? '☀️' : '🌙';
+        darkModeToggle.textContent = isDark ? '☀️zz' : '🌙';
         localStorage.setItem('darkMode', isDark);
     });
 }
