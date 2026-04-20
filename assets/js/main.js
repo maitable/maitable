@@ -1,6 +1,39 @@
 const moodButton = document.getElementById('moodButton');
 const navLinks = document.querySelectorAll('a[href^="#"]');
 
+async function loadAchievements() {
+  const grid = document.getElementById('achievementsGrid');
+  if (!grid) return;
+
+  try {
+    const res = await fetch('assets/json/achiev.json');
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const items = await res.json();
+
+    grid.innerHTML = items.map(item => `
+      <article class="window-card">
+        <div class="window-bar"><span>${escapeHtml(item.path)}</span></div>
+        <div class="window-body">
+          <h3>${escapeHtml(item.title)}</h3>
+          <p>${escapeHtml(item.description)}</p>
+          ${item.link ? `<a href="${encodeURI(item.link)}" class="small-button" target="_blank" rel="noopener noreferrer">${escapeHtml(item.linkLabel || 'View details')}</a>` : ''}
+        </div>
+      </article>
+    `).join('');
+  } catch (err) {
+    console.error('They dont want to load', err);
+    grid.innerHTML = `<p style="opacity:0.6">bro pleasework</p>`;
+  }
+}
+
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
+}
+
+document.addEventListener('DOMContentLoaded', loadAchievements);
+
 navLinks.forEach(link => {
     link.addEventListener('click', event => {
         const href = link.getAttribute('href');
