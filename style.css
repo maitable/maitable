@@ -28,3 +28,9 @@
 .container.ul::before::before{
     content : '•';
 }
+
+.active {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: default;
+}
