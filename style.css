@@ -37,6 +37,7 @@
 
 .cursor::after {
       content: '█';
+      color: #7496d0;
       animation: blink 1s step-end infinite;
 }
 
