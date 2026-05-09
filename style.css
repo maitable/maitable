@@ -5,7 +5,7 @@ body {
 
 .container {
     max-width: 720px;
-    margin: 0 auto;
+    margin: 0;
     padding: 0 20px;
     color: #ffffff;
     font-family: monospace, 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
