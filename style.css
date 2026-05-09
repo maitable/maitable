@@ -30,8 +30,14 @@ body {
     color: #7496d0;
 }
 
-.container.ul::before::before{
-    content : '•';
+.container ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.container ul li::before {
+    content: '• ';
+    color: #7496d0;
 }
 
 .active {
