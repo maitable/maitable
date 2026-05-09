@@ -60,3 +60,9 @@ body {
   @keyframes blink {
       50% { opacity: 0; }
 }
+
+@media (prefers-reduced-motion: reduce) {
+    .cursor::after {
+        animation: none;
+    }
+}
