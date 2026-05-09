@@ -9,6 +9,7 @@ fetch('data.json')
   .then(data => {
     const key = window.location.pathname.includes('enjoyables') ? 'enjoyables' : 'achievements';
     const ul = document.querySelector('ul');
+    if (!ul) return;
     data[key].forEach(a => {
       const li = document.createElement('li');
       li.textContent = a;
