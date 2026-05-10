@@ -66,3 +66,52 @@ body {
         animation: none;
     }
 }
+
+.help-menu {
+    position: fixed;
+    top: 12px;
+    right: 16px;
+    font-family: monospace;
+}
+
+.help-menu summary {
+    cursor: pointer;
+    list-style: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: #cba6f7;
+    color: black;
+    font-weight: bold;
+    user-select: none;
+}
+
+.help-menu summary::-webkit-details-marker {
+    display: none;
+}
+
+.help-menu ul {
+    position: absolute;
+    right: 0;
+    margin-top: 8px;
+    background: #1a1a1a;
+    padding: 8px 12px;
+    border: 1px solid #7496d0;
+    list-style: none;
+    white-space: nowrap;
+}
+
+.help-menu ul li::before {
+    content: '';
+}
+
+.help-menu a {
+    color: #cba6f7;
+    text-decoration: none;
+}
+
+.help-menu a:hover {
+    text-decoration: underline;
+}

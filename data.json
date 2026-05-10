@@ -1,4 +1,8 @@
 {
+  "links": [
+    { "label": "f1.maitable.org", "url": "https://f1.maitable.org" },
+    { "label": "pathway.maitable.org", "url": "https://pathway.maitable.org" }
+  ],
   "achievements": [
     "osc county '26 1st place",
     "unbreakable '26 2nd place",
