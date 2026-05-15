@@ -1,7 +1,8 @@
 {
   "links": [
     { "label": "f1.maitable.org", "url": "https://f1.maitable.org" },
-    { "label": "pathway.maitable.org", "url": "https://pathway.maitable.org" }
+    { "label": "pathway.maitable.org", "url": "https://pathway.maitable.org" },
+    {"label": "wiggle.maitable.org", "url" : "https://wiggle.maitable.org"}
   ],
   "achievements": [
     "osc county '26 1st place",
